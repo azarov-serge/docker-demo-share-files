@@ -1,4 +1,4 @@
-# docker-demo-share-files
+# docker-demo-share-files (docker image)
 
 Clone project and create image:
 
