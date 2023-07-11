@@ -46,7 +46,7 @@ Result:
 Run:
 
 ```bash
-docker run --name share-files-1 -v share-files-volume:/opt/app/data -p 3000:3000  -d share-files:latest
+docker run --name share-files-1 -v share-files-volume:/opt/app/data -p 3000:3000 -d share-files:latest
 curl "127.0.0.1:3000/set?id=1234"
 ```
 
@@ -71,12 +71,39 @@ Result:
 Run:
 
 ```bash
-docker run --name share-files-2 -v share-files-volume:/opt/app/data -p 3001:3000  -d share-files:latest
- curl "127.0.0.1:3001/get"
+docker run --name share-files-2 -v share-files-volume:/opt/app/data -p 3001:3000 -d share-files:latest
+curl "127.0.0.1:3001/get"
 ```
 
 Result:
 
 ```bash
 1234
+```
+
+Clear all, stop all or remove all:
+
+```bash
+docker container prune
+docker volume prune
+```
+
+For add volume (Dockerfile)
+
+```Dockerfile
+FROM node:14-alpine as build
+WORKDIR /opt/app
+ADD *.json ./
+RUN npm install
+ADD . .
+VOLUME ["/opt/app/data"]
+CMD ["node", "./src/index.js"]
+```
+
+Run:
+
+```bash
+docker build -t share-files-v:latest .
+docker volume inspect share-files-volume
+docker run --name share-files-3 -v share-files-volume:/opt/app/data -p 3002:3000 -d share-files-v:latest
 ```
